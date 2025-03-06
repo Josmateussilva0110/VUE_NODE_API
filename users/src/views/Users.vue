@@ -20,12 +20,19 @@
                     <td>
                         <div>
                             <button class="edit" @click="editUser(user)">Editar</button>
-                            <button class="delete" @click="deleteUser(user.id)">Excluir</button>
+                            <button class="delete" @click="confirmDelete(user.id)">Excluir</button>
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <div v-if="showConfirm" class="modal">
+            <div class="modal-content">
+                <p>Deseja realmente excluir este usuário?</p>
+                <button @click="deleteUser">Sim</button>
+                <button @click="showConfirm = false">Cancelar</button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -35,8 +42,10 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            users: []
-        };
+            users: [],
+            showConfirm: false,
+            userIdToDelete: null
+        }
     },
     created() {
         const req = {
@@ -61,6 +70,29 @@ export default {
                 return "Usuário";
             }
         },
+
+        confirmDelete(userId) {
+            this.userIdToDelete = userId;
+            this.showConfirm = true;
+        },
+
+        deleteUser() {
+            const req = {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('token')
+                }
+            }
+
+
+            axios.delete('http://localhost:8086/user/'+this.userIdToDelete, req).then(response => {
+                console.log(response)
+                this.showConfirm = false
+                this.users = this.users.filter(user => user.id !== this.userIdToDelete)
+
+            }).catch(error => {
+                console.error("Erro ao excluir usuário:", error);
+            });
+        }
     }
 };
 </script>
@@ -110,4 +142,28 @@ button.delete {
     background-color: #f44336;
     color: white;
 }
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.modal-content button {
+    margin: 10px;
+}
+
 </style>
