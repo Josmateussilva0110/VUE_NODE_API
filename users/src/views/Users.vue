@@ -19,7 +19,7 @@
                     <td>{{ processRole(user.role) }}</td>
                     <td>
                         <div>
-                            <button class="edit" @click="editUser(user)">Editar</button>
+                            <router-link :to="{name: 'editUser', params: {id: user.id}}"><button class="edit">Editar</button></router-link>
                             <button class="delete" @click="confirmDelete(user.id)">Excluir</button>
                         </div>
                     </td>
