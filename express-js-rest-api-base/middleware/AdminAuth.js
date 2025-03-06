@@ -1,5 +1,6 @@
 var jwt = require("jsonwebtoken")
-var secret = "fjskhfrjkgjrhdkfjklnlashdjhjdfsbdfnbmsfbrfndbndbsmoiwwq"
+require("dotenv").config();
+const secret = process.env.SECRET_KEY;
 
 module.exports = function(request, response, next) {
     const authToken = request.headers['authorization']

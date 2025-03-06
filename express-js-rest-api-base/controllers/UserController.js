@@ -4,7 +4,9 @@ const jwt = require("jsonwebtoken")
 var bcrypt = require("bcrypt")
 
 
-var secret = "fjskhfrjkgjrhdkfjklnlashdjhjdfsbdfnbmsfbrfndbndbsmoiwwq"
+require("dotenv").config();
+const secret = process.env.SECRET_KEY;
+
 
 class UserController {
 
